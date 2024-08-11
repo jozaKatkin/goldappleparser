@@ -1,0 +1,13 @@
+
+#!gradle/wrapper/gradle-wrapper.jar
+#!**/src/main/**/build/
+#!**/src/test/**/build/
+
+
+/.gradle/
+/.idea/
+/build/
+/gradle/
+/gradlew
+/gradlew.bat
+/settings.gradle.kts
