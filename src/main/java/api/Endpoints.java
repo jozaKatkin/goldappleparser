@@ -3,7 +3,7 @@ package api;
 public enum Endpoints {
 
     BASE_URI("https://goldapple.by"),
-    HAIR_MASKS_URI(BASE_URI.getUri() + "/volosy/uhod-za-volosami/maski");
+    HAIR_MASKS_URI(BASE_URI.getUri() + "/volosy/uhod-za-volosami/maski?format=json");
 
     Endpoints(final String uri) {
         this.uri = uri;
