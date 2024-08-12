@@ -15,4 +15,7 @@ public class JsonParser {
         return getJsonPathFromResponse(response).getList(itemPathInResponse);
     }
 
+    public static int getIntFromResponseByPath(Response response, String pathInResponse) {
+         return getJsonPathFromResponse(response).getInt(pathInResponse);
+    }
 }

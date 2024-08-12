@@ -5,7 +5,7 @@ public class BaseTest {
 
     @Test
     public void test() {
-        ProductParser.getProducts()
-                .forEach(System.out::println);
+        ProductParser.getProductIdsFromAllPages();
+
     }
 }
