@@ -30,6 +30,7 @@ dependencies {
     implementation("org.slf4j:slf4j-simple:2.0.7")
 
     implementation("io.rest-assured:rest-assured:5.3.2")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.17.2")
 
 }
 

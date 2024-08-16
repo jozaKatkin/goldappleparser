@@ -1,45 +1,44 @@
 package api;
 
+import api.models.Product;
 import io.restassured.response.Response;
+import utils.CsvFileUtility;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProductParser {
 
-    private static final String productIdPath = "data.products.itemId";
-    private static final String totalNumberOfProductsPath = "data.count";
-    private static final double numberOfProductsPerPage = 24;
-    private static final int pageNumberToGetTotalProducts = 1;
+    private static final String productContentsPath = "data.productDescription.content";
+    private static final String productNamePath = "data.name";
+    private static final String productPricePath = "data.variants.price.actual.amount[0]";
+    private static final String productUrlPath = "data.variants.url";
 
-    public static List<String> getProductIdsListFromPageNumber(int pageNumber) {
-        Response response = ConnectionUtility.makeGetRequestToUriAndReturnResponse(Endpoints.HAIR_MASKS_PAGE_OPTIONAL_URI, pageNumber);
-        return JsonParser.getStringListFromResponseByItemPath(response, productIdPath);
+    public static Response getProductResponse(String productId) {
+        return ConnectionUtility.makeGetRequestToUriAndReturnResponse(Endpoints.PRODUCT_ID_URI, productId);
     }
 
-    public static List<String> getProductIdsFromAllPages() {
-        List<String> allProductIds = new ArrayList<>();
-         int totalNumberOfPages = getTotalNumberOfPages();
-        System.out.println("Total number of pages: " + totalNumberOfPages);
+    public static Product createProductFromResponse(String productId) {
+        Response response = getProductResponse(productId);
 
-        for (int page = 1; page <= totalNumberOfPages; page++) {
-            System.out.println("Current page: " + page);
-            List<String> currentPageIds = getProductIdsListFromPageNumber(page);
-            currentPageIds.forEach(System.out::println);
-            allProductIds.addAll(currentPageIds);
+        String name = response.jsonPath().getString(productNamePath);
+        int price = response.jsonPath().getInt(productPricePath);
+        String url = response.jsonPath().getString(productUrlPath);
+
+        List<String> description = response.jsonPath().getList(productContentsPath);
+
+        String ingredients = "No ingredients where found";
+        if (description.size() >= 4) {
+            ingredients = description.reversed().get(2);
         }
-        System.out.println("All products size: " + allProductIds.size());
-//        allProductIds.forEach(System.out::println);
-        return allProductIds;
+
+        return new Product(productId, name, price, ingredients, url);
     }
 
-    private static int getTotalNumberOfPages() {
-        double totalNumberOfProducts = getTotalNumberOfProducts();
-        return (int) Math.ceil(totalNumberOfProducts / numberOfProductsPerPage);
-    }
-
-    private static int getTotalNumberOfProducts() {
-        Response response = ConnectionUtility.makeGetRequestToUriAndReturnResponse(Endpoints.HAIR_MASKS_PAGE_OPTIONAL_URI, pageNumberToGetTotalProducts);
-        return JsonParser.getIntFromResponseByPath(response, totalNumberOfProductsPath);
+    public static List<Product> createProductsUsingCsvIds() {
+        List<String> ids = CsvFileUtility.readLinesFromCsv();
+        List<Product> products = new ArrayList<>();
+        ids.forEach(id -> products.add(createProductFromResponse(id)));
+        return products;
     }
 }
