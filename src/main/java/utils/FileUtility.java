@@ -14,4 +14,10 @@ public class FileUtility {
             throw new RuntimeException(e);
         }
     }
+
+    public static void checkIfPathExists(ProjectPaths path) {
+        if (!Files.exists(path.getPath())) {
+            throw new RuntimeException(path.getPath() + " does not exist");
+        }
+    }
 }

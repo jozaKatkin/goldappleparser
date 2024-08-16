@@ -15,4 +15,7 @@ public class Product {
         this.ingredients = ingredients;
         this.url = url;
     }
+
+    public Product() {
+    }
 }

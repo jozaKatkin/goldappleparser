@@ -1,10 +1,7 @@
-import api.ProductIdsAggregator;
-import api.ProductParser;
 import api.models.Product;
-import api.serialization.Serializer;
+import api.serialization.Deserializer;
 import enums.ProjectPaths;
 import org.junit.jupiter.api.Test;
-import utils.CsvFileUtility;
 
 import java.util.List;
 
@@ -22,10 +19,16 @@ public class BaseTest {
 //
 
 
-        List<String> ids = ProductIdsAggregator.getProductIdsListFromPageNumber(19);
+//        List<String> ids = ProductIdsAggregator.getProductIdsListFromPageNumber(19);
+//
+//        CsvFileUtility.createNewCsvAndWriteListOfLines(ids);
+//        List<Product> products = ProductParser.createProductsUsingCsvIds();
 
-        CsvFileUtility.createNewCsvAndWriteListOfLines(ids);
-        List<Product> products = ProductParser.createProductsUsingCsvIds();
+
+
+//        Serializer.serializeListOfProducts(products, ProjectPaths.ARTIFACTS_FOLDER, ProjectPaths.PRODUCTS_JSON_FILE);
+
+        List<Product> products = Deserializer.deserializeProductsFronJson(ProjectPaths.PRODUCTS_JSON_FILE);
         products.forEach(product -> {
             System.out.println("_____________________");
             System.out.println(product.id);
@@ -35,8 +38,6 @@ public class BaseTest {
             System.out.println(product.ingredients);
             System.out.println("_____________________");
         });
-
-        Serializer.serializeListOfProducts(products, ProjectPaths.ARTIFACTS_FOLDER, ProjectPaths.PRODUCTS_JSON_FILE);
     }
 
 
